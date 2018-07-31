@@ -1,0 +1,58 @@
+#
+# Use bootstrap: "--bootstrap" on initial run, then disable on second run
+# to allow voting. bootstrap is only required for initial cluster formation
+# and should be avoided anytime after.
+
+---
+driver:
+  name: vagrant
+provisioner:
+  name: chef_zero
+  always_update_cookbooks: true
+verifier:
+  name: inspec
+
+driver_config:
+  #box: bento/ubuntu-16.04
+  box: bento/fedora-27
+  customize:
+    memory: 1024
+
+
+platforms:
+
+    #
+    # Initial leader node
+    #
+  - name: vault-0
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.240"}]
+    attributes:
+      vault:
+        conf:
+          bind_addr: "10.0.3.240"
+
+
+
+suites:
+  - name: default
+    run_list:
+      - recipe[vault::default]
+    verifier:
+      inspec_tests:
+        - test/integration
+    attributes:
+      vault:
+        conf:
+          ui: true
+          datacenter: "office"
+          encrypt: "mlhw8wEnpHejll40nQx/4Q=="
+
+          # All node ip's that form the cluster
+          # These can be hostnames in an environment with DNS resolution
+          retry_join: [
+            "10.0.3.240",
+            "10.0.3.241",
+            "10.0.3.242"
+          ]
