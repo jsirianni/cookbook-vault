@@ -1,0 +1,18 @@
+ui = "<%=node[:vault][:conf][:ui]%>"
+
+
+listener "tcp" {
+  address          = "<%=node[:vault][:conf][:listener][:bind_addr]%>:<%=node[:vault][:conf][:listener][:bind_port]%>"
+  cluster_address  = "<%=node[:vault][:conf][:listener][:cluster_addr]%>:<%=node[:vault][:conf][:listener][:cluster_port]%>"
+  tls_disable      = "<%=node[:vault][:conf][:listener][:tls_disable]%>"
+}
+
+
+api_addr =  "<%=node[:vault][:conf][:api_addr]%>:<%=node[:vault][:conf][:listener][:bind_port]%>"
+cluster_addr = "<%=node[:vault][:conf][:cluster_addr]%>:<%=node[:vault][:conf][:listener][:cluster_port]%>"
+
+
+storage "consul" {
+  address = "<%=node[:vault][:conf][:storage][:socket]%>"
+  path    = "<%=node[:vault][:conf][:storage][:path]%>"
+}

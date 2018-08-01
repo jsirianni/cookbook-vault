@@ -1,6 +1,6 @@
 dirs = [
   node[:vault][:conf][:base],
-  node[:vault][:conf][:data_dir]
+  node[:vault][:conf][:pid_dir]
 ]
 
 
@@ -17,8 +17,8 @@ end
 
 
 # Create server config
-template "#{node[:vault][:conf][:base]}/server.json" do
-  source "server.json.erb"
+template "#{node[:vault][:conf][:config]}" do
+  source "server.hcl.erb"
   owner node[:vault][:user]
   group node[:vault][:group]
   mode "0600"

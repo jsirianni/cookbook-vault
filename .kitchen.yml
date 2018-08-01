@@ -21,29 +21,103 @@ driver_config:
 
 platforms:
 
-    #
     # Initial leader node
     #
-  - name: vault-0
+  - name: consul-0
+    run_list:
+      - recipe[consul::default]
     driver_config:
       network:
         - ["private_network", {ip: "10.0.3.240"}]
     attributes:
-      vault:
+      consul:
         conf:
           bind_addr: "10.0.3.240"
+          # NOTE: Must be true for first run, on one node.
+          #bootstrap: true
+          bootstrap: false
 
+  - name: consul-1
+    run_list:
+      - recipe[consul::default]
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.241"}]
+    attributes:
+      consul:
+        conf:
+          bind_addr: "10.0.3.241"
+
+  - name: consul-2
+    run_list:
+      - recipe[consul::default]
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.242"}]
+    attributes:
+      consul:
+        conf:
+          bind_addr: "10.0.3.242"
+
+
+    # Consul agents
+    #
+  - name: vault-0
+    run_list:
+      - recipe[consul::default]
+      - recipe[vault::default]
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.250"}]
+    attributes:
+      consul:
+        conf:
+          server: false
+          bind_addr: "10.0.3.250"
+      vault:
+        conf:
+          ui: true
+          listener:
+            bind_addr: "10.0.3.250"
+            cluster_addr: "10.0.3.250"
+            tls_disable: true
+          api_addr: "http://10.0.3.250"
+          cluster_addr: "http://10.0.3.250"
+          storage:
+            socket: "10.0.3.250:8500"
+
+  - name: vault-1
+    run_list:
+      - recipe[consul::default]
+      - recipe[vault::default]
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.251"}]
+    attributes:
+      consul:
+        conf:
+          server: false
+          bind_addr: "10.0.3.251"
+      vault:
+        conf:
+          ui: true
+          listener:
+            bind_addr: "10.0.3.251"
+            cluster_addr: "10.0.3.251"
+            tls_disable: true
+          api_addr: "http://10.0.3.251"
+          cluster_addr: "http://10.0.3.251"
+          storage:
+            socket: "10.0.3.251:8500"
 
 
 suites:
   - name: default
-    run_list:
-      - recipe[vault::default]
     verifier:
       inspec_tests:
-        - test/integration
+        - ../cookbook-consul/test/integration
     attributes:
-      vault:
+      consul:
         conf:
           ui: true
           datacenter: "office"
