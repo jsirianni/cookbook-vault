@@ -1,0 +1,132 @@
+#
+# Use bootstrap: "--bootstrap" on initial run, then disable on second run
+# to allow voting. bootstrap is only required for initial cluster formation
+# and should be avoided anytime after.
+
+---
+driver:
+  name: vagrant
+provisioner:
+  name: chef_zero
+  always_update_cookbooks: true
+verifier:
+  name: inspec
+
+driver_config:
+  #box: bento/ubuntu-16.04
+  box: bento/fedora-27
+  customize:
+    memory: 1024
+
+
+platforms:
+
+    # Initial leader node
+    #
+  - name: consul-0
+    run_list:
+      - recipe[consul::default]
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.240"}]
+    attributes:
+      consul:
+        conf:
+          bind_addr: "10.0.3.240"
+          # NOTE: Must be true for first run, on one node.
+          #bootstrap: true
+          bootstrap: false
+
+  - name: consul-1
+    run_list:
+      - recipe[consul::default]
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.241"}]
+    attributes:
+      consul:
+        conf:
+          bind_addr: "10.0.3.241"
+
+  - name: consul-2
+    run_list:
+      - recipe[consul::default]
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.242"}]
+    attributes:
+      consul:
+        conf:
+          bind_addr: "10.0.3.242"
+
+
+    # Consul agents
+    #
+  - name: vault-0
+    run_list:
+      - recipe[consul::default]
+      - recipe[vault::default]
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.250"}]
+    attributes:
+      consul:
+        conf:
+          server: false
+          bind_addr: "10.0.3.250"
+      vault:
+        conf:
+          ui: true
+          listener:
+            bind_addr: "10.0.3.250"
+            cluster_addr: "10.0.3.250"
+            tls_disable: true
+          api_addr: "http://10.0.3.250"
+          cluster_addr: "http://10.0.3.250"
+          storage:
+            socket: "10.0.3.250:8500"
+
+  - name: vault-1
+    run_list:
+      - recipe[consul::default]
+      - recipe[vault::default]
+    driver_config:
+      network:
+        - ["private_network", {ip: "10.0.3.251"}]
+    attributes:
+      consul:
+        conf:
+          server: false
+          bind_addr: "10.0.3.251"
+      vault:
+        conf:
+          ui: true
+          listener:
+            bind_addr: "10.0.3.251"
+            cluster_addr: "10.0.3.251"
+            tls_disable: true
+          api_addr: "http://10.0.3.251"
+          cluster_addr: "http://10.0.3.251"
+          storage:
+            socket: "10.0.3.251:8500"
+
+
+suites:
+  - name: default
+    verifier:
+      inspec_tests:
+        - ../cookbook-consul/test/integration
+    attributes:
+      consul:
+        conf:
+          ui: true
+          datacenter: "office"
+          encrypt: "mlhw8wEnpHejll40nQx/4Q=="
+
+          # All node ip's that form the cluster
+          # These can be hostnames in an environment with DNS resolution
+          retry_join: [
+            "10.0.3.240",
+            "10.0.3.241",
+            "10.0.3.242"
+          ]
