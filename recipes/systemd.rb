@@ -13,7 +13,6 @@ execute "reload_systemd" do
   command "systemctl daemon-reload"
   action :nothing
   notifies :reload, "service[vault]", :delayed
-  # notifies :reload, "service[vault]", :immediately
 end
 
 
