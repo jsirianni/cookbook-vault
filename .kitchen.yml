@@ -34,8 +34,8 @@ platforms:
         conf:
           bind_addr: "10.0.3.240"
           # NOTE: Must be true for first run, on one node.
-          #bootstrap: true
-          bootstrap: false
+          bootstrap: true
+          #bootstrap: false
 
   - name: consul-1
     run_list:

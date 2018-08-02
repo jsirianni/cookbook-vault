@@ -17,9 +17,10 @@ default[:vault][:sha256] = "b3c8a62e8f2f1b2d9d7ddca3d8bda620ab0091bb038da0d013c2
 
 
 # Directories and config file
-default[:vault][:conf][:base]   = "/etc/vault/vault.d"
+default[:vault][:conf][:base]    = "/etc/vault/vault.d"
 default[:vault][:conf][:pid_dir] = "/var/run/vault"
-default[:vault][:conf][:config] = "/etc/vault/vault.d/server.hcl"
+default[:vault][:conf][:pid]     = "/var/run/vault/vault.pid"
+default[:vault][:conf][:config]  = "/etc/vault/vault.d/server.hcl"
 
 
 # Config params

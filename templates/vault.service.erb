@@ -16,8 +16,10 @@ After=network-online.target
 [Service]
 User=<%=node[:vault][:user]%>
 Group=<%=node[:vault][:group]%>
-PIDFile=<%=node[:vault][:conf][:pid_dir]%>/vault.pid
-ExecStart=<%=node[:vault][:binary]%> server -config=<%=node[:vault][:conf][:config]%> -log-level=<%=node[:vault][:conf][:log_level]%>
+PIDFile=<%=node[:vault][:conf][:pid]%>
+ExecStart=<%=node[:vault][:binary]%> server \
+    -config=<%=node[:vault][:conf][:config]%> \
+    -log-level=<%=node[:vault][:conf][:log_level]%>
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 KillSignal=SIGTERM
