@@ -115,7 +115,7 @@ suites:
   - name: default
     verifier:
       inspec_tests:
-        - ../cookbook-consul/test/integration
+        - test/
     attributes:
       consul:
         conf:

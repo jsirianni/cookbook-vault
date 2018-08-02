@@ -33,18 +33,14 @@ describe command('sudo cat /etc/systemd/system/vault.service | grep Restart') do
    its('stdout') { should match (/Restart=on-failure/) }
 end
 
-describe command('sudo cat /etc/systemd/system/vault.service | grep ExecStart | cut -c 11-51') do
-   its('stdout') { should match ("/usr/local/bin/vault agent -server -bind") }
-end
-
-describe command('sudo cat /etc/systemd/system/vault.service | grep ExecStart | cut -c 64-86') do
-   its('stdout') { should match ("-config-dir=/etc/vault") }
+describe command('sudo cat /etc/systemd/system/vault.service | grep "ExecStart" -A 2 | xargs | xargs') do
+   its('stdout') { should match ("ExecStart=/usr/local/bin/vault server -config=/etc/vault/vault.d/server.hcl -log-level=info") }
 end
 
 describe command('sudo cat /etc/systemd/system/vault.service | grep ExecReload') do
-   its('stdout') { should match ("ExecReload=/usr/local/bin/vault reload -http-addr #{node['vault']['conf']['bind_addr']}:8500") }
+   its('stdout') { should match ("ExecReload=/bin/kill -HUP $MAINPID\n") }
 end
 
 describe command('sudo cat /etc/systemd/system/vault.service | grep KillSignal') do
-   its('stdout') { should match (/KillSignal=SIGINT/) }
+   its('stdout') { should match (/KillSignal=SIGTERM/) }
 end
