@@ -21,6 +21,7 @@ describe command("sudo /usr/local/bin/vault --version") do
 end
 
 # Check status
+# Vault must init before this test will pass, browse to the vault IP
 describe command("sudo /usr/local/bin/vault status -address=http://#{node['vault']['conf']['listener']['bind_addr']}:8200 | grep Sealed") do
     its('stdout') { should match (/true/) }
 end
