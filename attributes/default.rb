@@ -34,8 +34,8 @@ default[:vault][:conf][:listener][:cluster_port]  = '8201'
 default[:vault][:conf][:listener][:tls_disable]   = false
 
 # NOTE: These should be physical interface addresses, not 0.0.0.0 or loopback
-default[:vault][:conf][:api_addr]     = "override me"
-default[:vault][:conf][:cluster_addr] = "override me"
+default[:vault][:conf][:api_addr]     = "http://#{node[:fqdn]}" 
+default[:vault][:conf][:cluster_addr] = "http://#{node[:fqdn]}"
 
 default[:vault][:conf][:storage][:socket] = "127.0.0.1:8500"  # ip and port that consul is listening on
 default[:vault][:conf][:storage][:path]    = "vault/"
