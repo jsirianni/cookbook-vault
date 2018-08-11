@@ -33,8 +33,12 @@ default[:vault][:conf][:listener][:cluster_addr]  = '0.0.0.0' # Must be overridd
 default[:vault][:conf][:listener][:cluster_port]  = '8201'
 default[:vault][:conf][:listener][:tls_disable]   = false
 
+default[:vault][:conf][:listener][:cert_dir] = "/etc/vault/cert"
+default[:vault][:conf][:listener][:cert]     = "/etc/vault/cert/vault.crt" # NOTE: The cookbook will not place these files
+default[:vault][:conf][:listener][:key]      = "/etc/vault/cert/vault.key"
+
 # NOTE: These should be physical interface addresses, not 0.0.0.0 or loopback
-default[:vault][:conf][:api_addr]     = "http://#{node[:fqdn]}" 
+default[:vault][:conf][:api_addr]     = "http://#{node[:fqdn]}"
 default[:vault][:conf][:cluster_addr] = "http://#{node[:fqdn]}"
 
 default[:vault][:conf][:storage][:socket] = "127.0.0.1:8500"  # ip and port that consul is listening on
