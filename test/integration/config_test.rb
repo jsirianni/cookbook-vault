@@ -50,6 +50,33 @@ describe command('sudo cat /etc/vault/vault.d/server.hcl | grep tls_disable | xa
         }
 end
 
+describe command('sudo cat /etc/vault/vault.d/server.hcl | grep tls_cert_file | xargs') do
+    # NOTE: `xargs` removes the quotes from the value!
+    its('stdout') {
+        should match (
+            "tls_cert_file = #{node['vault']['conf']['listener']['tls_cert_file']}"
+            )
+        }
+end
+
+describe command('sudo cat /etc/vault/vault.d/server.hcl | grep tls_key_file | xargs') do
+    # NOTE: `xargs` removes the quotes from the value!
+    its('stdout') {
+        should match (
+            "tls_key_file = #{node['vault']['conf']['listener']['tls_key_file']}"
+            )
+        }
+end
+
+describe command('sudo cat /etc/vault/vault.d/server.hcl | grep tls_min_version | xargs') do
+    # NOTE: `xargs` removes the quotes from the value!
+    its('stdout') {
+        should match (
+            "tls_min_version = #{node['vault']['conf']['listener']['tls_min_version']}"
+            )
+        }
+end
+
 describe command('sudo cat /etc/vault/vault.d/server.hcl | grep address | xargs') do
     # NOTE: `xargs` removes the quotes from the value!
     its('stdout') {
@@ -68,14 +95,6 @@ describe command('sudo cat /etc/vault/vault.d/server.hcl | grep cluster_address 
         }
 end
 
-describe command('sudo cat /etc/vault/vault.d/server.hcl | grep tls_disable | xargs') do
-    # NOTE: `xargs` removes the quotes from the value!
-    its('stdout') {
-        should match (
-            "tls_disable = #{node['vault']['conf']['listener']['tls_disable']}"
-            )
-        }
-end
 
 describe command('sudo cat /etc/vault/vault.d/server.hcl | grep api_addr | xargs') do
     # NOTE: `xargs` removes the quotes from the value!
