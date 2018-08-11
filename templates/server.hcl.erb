@@ -4,7 +4,12 @@ ui = "<%=node[:vault][:conf][:ui]%>"
 listener "tcp" {
   address          = "<%=node[:vault][:conf][:listener][:bind_addr]%>:<%=node[:vault][:conf][:listener][:bind_port]%>"
   cluster_address  = "<%=node[:vault][:conf][:listener][:cluster_addr]%>:<%=node[:vault][:conf][:listener][:cluster_port]%>"
-  tls_disable      = "<%=node[:vault][:conf][:listener][:tls_disable]%>"
+
+  // TLS options
+  tls_disable     = "<%=node[:vault][:conf][:listener][:tls_disable]%>"
+  tls_cert_file   = "<%=node[:vault][:conf][:listener][:cert]%>"
+  tls_key_file    = "<%=node[:vault][:conf][:listener][:key]%>"
+  tls_min_version = "tls12"
 }
 
 
