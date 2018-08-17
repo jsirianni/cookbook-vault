@@ -14,9 +14,10 @@ verifier:
 
 driver_config:
   #box: bento/ubuntu-16.04
-  box: bento/fedora-27
+  #box: bento/fedora-27
+  box:  bento/centos-7.5
   customize:
-    memory: 1024
+    memory: 512
 
 
 platforms:
@@ -86,6 +87,7 @@ platforms:
           storage:
             socket: "10.0.3.250:8500"
 
+
   - name: vault-1
     run_list:
       - recipe[consul::default]
@@ -130,3 +132,13 @@ suites:
             "10.0.3.241",
             "10.0.3.242"
           ]
+          acl:
+            datacenter: "office"
+            default_policy: "deny"
+            master_token: "master"
+            agent_token: "master" 
+            down_policy: "extend-cache"
+      vault:
+        conf:
+          storage:
+            token: "master"
