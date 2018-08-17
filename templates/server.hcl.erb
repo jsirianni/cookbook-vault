@@ -20,4 +20,5 @@ cluster_addr = "<%=node[:vault][:conf][:cluster_addr]%>:<%=node[:vault][:conf][:
 storage "consul" {
   address = "<%=node[:vault][:conf][:storage][:socket]%>"
   path    = "<%=node[:vault][:conf][:storage][:path]%>"
+  token   = "<%=node[:vault][:conf][:storage][:token]%>"
 }
