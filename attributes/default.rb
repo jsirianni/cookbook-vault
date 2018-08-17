@@ -42,12 +42,10 @@ default[:vault][:conf][:api_addr]     = "http://#{node[:fqdn]}"
 default[:vault][:conf][:cluster_addr] = "http://#{node[:fqdn]}"
 
 default[:vault][:conf][:storage][:socket] = "127.0.0.1:8500"  # ip and port that consul is listening on
-default[:vault][:conf][:storage][:path]    = "vault/"
+default[:vault][:conf][:storage][:path]   = "vault/"
+default[:vault][:conf][:storage][:token]  = "example-token" # NOTE: should be overridden with a node attribute
 
 default[:vault][:conf][:log_level]  = "info"
-
-
-
 default[:vault][:conf][:syslog]     = "true"
 
 
